@@ -1,0 +1,56 @@
+﻿@model string
+@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">    </div>
+@using (Html.BeginForm("ImagePost", "Home", FormMethod.Post, new { enctype = "multipart/form-data", id="form" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="container">
+            <div class="row">
+                <input type="file" id="image1" name="input-b1" class="file">
+                <p id="btn">Click</p>
+                <button type="submit" id="submit" href="">Submit</button>
+                <div>
+                    <img id="imageCropper" src="">
+                    <img id="previewCropper" src="">
+                </div>
+                @Html.Hidden("image", "");
+
+            </div>
+        </div>
+    </div>
+}
+
+@section scripts{
+    <script>
+        $(function () {
+            var ee;
+            i = $('#imageCropper');
+            $(document).on('change', "#image1", function () {
+                var a = $("#image1").prop('files')[0];
+                i.attr('src', window.URL.createObjectURL(a));
+                i.cropper("destroy");
+                i.cropper({
+                    aspectRatio: 16 / 9,
+                });
+                $('#imageCropper').cropper('crop');
+            });
+            $(document).on('click', '#btn', function (e) {
+                $("#imageCropper").cropper('getCroppedCanvas').toBlob(function (blob) {
+                    $('#previewCropper').attr('src', window.URL.createObjectURL(blob));
+                    $('#submit').attr('href', window.URL.createObjectURL(blob));
+                    window.URL.revokeObjectURL(window.URL.createObjectURL(blob));
+                });
+                var a=$("#imageCropper").cropper('getCroppedCanvas').getContext("2d").getImageData(0,0,10,10).data;
+
+                $("#image").val(a);
+
+                $("#imageCropper").attr('src', "");
+                i.cropper("destroy");
+                b nbvnvb
+            });
+        });
+    </script>}
